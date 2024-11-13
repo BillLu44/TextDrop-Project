@@ -5,11 +5,11 @@
 # https://github.com/frereit/TensorflowHandwritingRecognition/blob/master/Preprocessing%20the%20data.md - extracting from NIST manually
 # Tutorial: https://medium.com/analytics-vidhya/optical-character-recognition-using-tensorflow-533061285dd3
 
-# from tensorflow.keras.datasets import mnist
+from tensorflow.keras.datasets import mnist
 import numpy as np
 import cv2
 from sklearn.preprocessing import LabelBinarizer
-from tf.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 # Load the MNIST dataset, which includes digits 0-9
 def load_mnist_data():
@@ -112,13 +112,4 @@ if __name__ == "__main__":
     generator = createImageGenerator(data)
 
 
-
-
-
-
-
-
-
-
-
-
+#
