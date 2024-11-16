@@ -43,4 +43,9 @@ class CNN:
         x = add([conv3, shortcut])
         return x
     
-    
+    @staticmethod
+    def buildArch(width, height, depth, classes, stages, filters, reg=0.0001, bnEps=2e-5, bnMom=0.9, dataset="cifar"):
+        inputShape = (height, width, depth)
+        channelDim = -1
+
+        
