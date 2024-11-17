@@ -6,16 +6,19 @@
 # Tutorial for data prep: https://medium.com/analytics-vidhya/optical-character-recognition-using-tensorflow-533061285dd3
 # Tutorial for everything else: https://youtu.be/jztwpsIzEGc?si=yt1GafU04D-fvd9S
 
+import tensorflow as tf
 from tensorflow.keras.datasets import mnist
 import numpy as np
 import cv2
 from sklearn.preprocessing import LabelBinarizer
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.optimizers import SGD
-from cnn import CNN
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
+from tensorflow.keras.callbacks import TensorBoard
+# from cnn import CNN
 
 # Constants for model training
-EPOCHS = 50
+EPOCHS = 20
 INIT_LR = 0.1
 BS = 128
 
@@ -65,8 +68,6 @@ def combineData(data1, labels1, data2, labels2):
     data = [cv2.resize(image, (32, 32)) for image in data]
     data = np.array(data, dtype="float32")
 
-    print(data)
-
     # Add a channel dimension (decrease dimension of data by 1), then scale pixel values to [0, 1] instead of [0, 255]
     data = np.expand_dims(data, axis=-1)
     data /= 255.0
@@ -105,18 +106,74 @@ def createImageGenerator():
         fill_mode = "nearest"
     )
 
-# Train the ResNet CNN
-def trainModel(data):
-    # Optimize the data for training
-    optimized = SGD(learning_rate=INIT_LR, decay=INIT_LR / EPOCHS)
+# Split data into training data, validation data, and test data
+def partitionData(data, labels):
+    train_size = int(len(data) * 0.7)
+    validation_size = int(len(data) * 0.2)
+    #The rest will be the test size
 
-    model = CNN.buildArch(32, 32, 1, len(le.classes_))
+    train_data = []
+    train_labels = []
+    validation_data = []
+    validation_labels = []
+    test_data = []
+    test_labels = []
+
+    for i in range(0, train_size):
+        train_data.append(data[i])
+        train_labels.append(labels[i])
+    
+    for i in range(train_size, train_size + validation_size):
+        validation_data.append(data[i])
+        validation_labels.append(labels[i])
+
+    for i in range(validation_size, len(data)):
+        test_data.append(data[i])
+        test_labels.append(labels[i])
+
+    return train_data, train_labels, validation_data, validation_labels, test_data, test_labels
+
+
+# Using tensorflow, build a CNN with various layers (convolution, max pooling, flatten, dense)
+def buildModel():
+    model = Sequential()
+
+    model.add(Conv2D(16, (3, 3), 1, activation="relu", input_shape=(28, 28, 1)))
+    model.add(MaxPooling2D())
+    model.add(Conv2D(32, (3, 3), 1, activation="relu"))
+    model.add(MaxPooling2D())
+    model.add(Conv2D(16, (3, 3), 1, activation="relu"))
+    model.add(MaxPooling2D())
+    model.add(Flatten())
+    model.add(Dense(256, activation="relu"))
+    model.add(Dense(1, activation="sigmoid"))
+
+    model.compile("adam", loss=tf.losses.BinaryCrossentropy(), metrics=["accuracy"])
+
+    model.summary()
+    return model
+
+# BROKEN
+def trainModel(model, data, labels, train_data, train_labels, validation_data, validation_labels, test_data, test_labels):
+    tensorboard_callback = TensorBoard(log_dir="logs")
+    ((trainData, trainLabels), (testData, testLabels)) = mnist.load_data()
+
+    trainData = np.array(trainData, dtype="float32")
+    # Add a channel dimension (decrease dimension of data by 1), then scale pixel values to [0, 1] instead of [0, 255]
+    trainData = np.expand_dims(trainData, axis=-1)
+    trainData /= 255.0
+
+    # Binarize the labels (make them 0-1)
+    binarizer = LabelBinarizer()
+    trainLabels = binarizer.fit_transform(trainLabels)
+
+    hist = model.fit(trainData, trainLabels, epochs=EPOCHS, batch_size=1, validation_split=0.2, callbacks=[tensorboard_callback])
 
 
 # Testing
 if __name__ == "__main__":
     (digitData, digitLabels) = load_mnist_data()
-    (capitalAzData, capitalAzLabels) = load_az_data("project/data/A_Z Handwritten Data.csv")
+    (capitalAzData, capitalAzLabels) = load_az_data("data/A_Z Handwritten Data.csv")
 
     # Shift the A-Z to occupy 10-35 instead, so that they don't interfere with digits 0-9
     capitalAzLabels += 10
@@ -125,6 +182,11 @@ if __name__ == "__main__":
     classWeight = weighClasses(labels)
     
     generator = createImageGenerator()
+    (train_data, train_labels, validation_data, validation_labels, test_data, test_labels) = partitionData(data, labels)
+    model = buildModel()
+    trainModel(model, data, labels, train_data, train_labels, validation_data, validation_labels, test_data, test_labels)
+
+    
 
 
 #
