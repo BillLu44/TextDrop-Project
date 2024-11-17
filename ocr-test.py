@@ -3,13 +3,21 @@
 # - MNIST for digits 0-9: https://yann.lecun.com/exdb/mnist/
 # - Need to get the rest of the characters. May use this for A-Z as a starting point: https://www.kaggle.com/datasets/sachinpatel21/az-handwritten-alphabets-in-csv-format
 # https://github.com/frereit/TensorflowHandwritingRecognition/blob/master/Preprocessing%20the%20data.md - extracting from NIST manually
-# Tutorial: https://medium.com/analytics-vidhya/optical-character-recognition-using-tensorflow-533061285dd3
+# Tutorial for data prep: https://medium.com/analytics-vidhya/optical-character-recognition-using-tensorflow-533061285dd3
+# Tutorial for everything else: https://youtu.be/jztwpsIzEGc?si=yt1GafU04D-fvd9S
 
 from tensorflow.keras.datasets import mnist
 import numpy as np
 import cv2
 from sklearn.preprocessing import LabelBinarizer
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.optimizers import SGD
+from cnn import CNN
+
+# Constants for model training
+EPOCHS = 50
+INIT_LR = 0.1
+BS = 128
 
 # Load the MNIST dataset, which includes digits 0-9
 def load_mnist_data():
@@ -86,7 +94,7 @@ def weighClasses(labels):
     
 # Create an image data generator, which will augment images from the dataset for training.
 # This creates variations of images for an artificially "larger" dataset
-def createImageGenerator(data):
+def createImageGenerator():
     return ImageDataGenerator(
         rotation_range = 10,
         zoom_range = 0.05,
@@ -96,6 +104,13 @@ def createImageGenerator(data):
         horizontal_flip = False,
         fill_mode = "nearest"
     )
+
+# Train the ResNet CNN
+def trainModel(data):
+    # Optimize the data for training
+    optimized = SGD(learning_rate=INIT_LR, decay=INIT_LR / EPOCHS)
+
+    model = CNN.buildArch(32, 32, 1, len(le.classes_))
 
 
 # Testing
@@ -109,7 +124,7 @@ if __name__ == "__main__":
     (data, labels) = combineData(digitData, digitLabels, capitalAzData, capitalAzLabels)
     classWeight = weighClasses(labels)
     
-    generator = createImageGenerator(data)
+    generator = createImageGenerator()
 
 
 #
