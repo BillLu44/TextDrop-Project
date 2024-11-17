@@ -73,7 +73,7 @@ def combineData(data1, labels1, data2, labels2):
 # Create an image data generator, which will augment images from the dataset for training.
 # This creates variations of images for an artificially "larger" dataset
 def createImageGenerator():
-    return ImageDataGenerator(
+    aug = ImageDataGenerator(
         rotation_range = 10,
         zoom_range = 0.05,
         width_shift_range = 0.1,
@@ -82,6 +82,8 @@ def createImageGenerator():
         horizontal_flip = False,
         fill_mode = "nearest"
     )
+
+    return aug
 
 # Deal with skew using class weights
 def weighClasses(labels):
@@ -123,11 +125,13 @@ def trainModel(model, train_data, train_labels, val_data, val_labels, class_weig
     aug = createImageGenerator()
     aug.fit(train_data)
 
-    history = model.fit(aug.flow(train_data, train_labels, batch_size=BATCH_SIZE), 
+    # Calculate sample weights based on class weights
+    sample_weights = np.array([class_weight[np.argmax(label)] for label in train_labels])
+
+    history = model.fit(aug.flow(train_data, train_labels, batch_size=BATCH_SIZE, sample_weight=sample_weights), 
                         validation_data=(val_data, val_labels),
-                        steps_per_epoch=len(train_data) // BATCH_SIZE,
+                        # steps_per_epoch=len(train_data) // BATCH_SIZE,
                         epochs=EPOCHS,
-                        class_weight=class_weight,
                         verbose=1)
     # history = model.fit(train_data, train_labels, 
     #                     batch_size=BATCH_SIZE,
@@ -176,7 +180,7 @@ if __name__ == "__main__":
 
     (data, labels) = combineData(digitData, digitLabels, capitalAzData, capitalAzLabels)
     classWeight = weighClasses(labels)
-    train_data, val_data, train_labels, val_labels = train_test_split(data, labels, test_size=0.2, stratify=labels, random_state=42)
+    (train_data, val_data, train_labels, val_labels) = train_test_split(data, labels, test_size=0.2, stratify=labels, random_state=42)
 
     model = buildModel()
     history = trainModel(model, train_data, train_labels, val_data, val_labels, classWeight)
