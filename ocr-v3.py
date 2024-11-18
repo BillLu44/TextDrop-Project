@@ -2,29 +2,34 @@ import tensorflow as tf
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from tensorflow.keras.datasets import mnist
-from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.callbacks import TensorBoard, EarlyStopping
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import numpy as np
-from sklearn.preprocessing import LabelBinarizer
+from sklearn.preprocessing import LabelBinarizer, LabelEncoder
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plot
 import sys
+import random
 
 # Constants
 NUM_LABELS = 36
-EPOCHS = 10
+EPOCHS = 50
 BATCH_SIZE = 32
+
+# Global label binarizer/encoder
+binarizer = LabelBinarizer()
+le = LabelEncoder()
 
 # Load the MNIST dataset, which includes digits 0-9
 def load_mnist_data():
 
     # Load all train/test data, then combine them into arrays
     ((trainData, trainLabels), (testData, testLabels)) = mnist.load_data()
-    data = np.vstack([trainData, testData]) # Stack the data vertically
-    labels = np.hstack([trainLabels, testLabels])   # Stack the labels horizontally
+    data = np.vstack([trainData]) # Stack the data vertically 
+    labels = np.hstack([trainLabels])   # Stack the labels horizontally
 
-    return (data, labels)
+    return (data, labels, testData, testLabels)
 
 
 # Load the Kaggle dataset, which includes capital letters A-Z
@@ -50,7 +55,10 @@ def load_az_data(datasetPath):
     data = np.array(data, dtype="float32")
     labels = np.array(labels, dtype="int")
 
-    return (data, labels)
+    # Extract some data for testing
+    (data, test_data, labels, test_labels) = train_test_split(data, labels, test_size=0.1, stratify=labels, random_state=42)
+
+    return (data, labels, test_data, test_labels)
 
 
 # Combine two datasets together, including their data and labels. More preparation of the data.
@@ -65,7 +73,6 @@ def combineData(data1, labels1, data2, labels2):
     data /= 255.0
 
     # Binarize the labels (make them 0-1)
-    binarizer = LabelBinarizer()
     labels = binarizer.fit_transform(labels)
 
     return (data, labels)
@@ -128,20 +135,52 @@ def trainModel(model, train_data, train_labels, val_data, val_labels, class_weig
     # Calculate sample weights based on class weights
     sample_weights = np.array([class_weight[np.argmax(label)] for label in train_labels])
 
-    history = model.fit(aug.flow(train_data, train_labels, batch_size=BATCH_SIZE, sample_weight=sample_weights), 
-                        validation_data=(val_data, val_labels),
-                        # steps_per_epoch=len(train_data) // BATCH_SIZE,
-                        epochs=EPOCHS,
-                        verbose=1)
-    # history = model.fit(train_data, train_labels, 
-    #                     batch_size=BATCH_SIZE,
+    # Implement early stopping
+    earlyStop = EarlyStopping(
+        monitor="val_loss",
+        patience=3,
+        restore_best_weights=True
+    )
+
+    # history = model.fit(aug.flow(train_data, train_labels, batch_size=BATCH_SIZE), 
     #                     validation_data=(val_data, val_labels),
     #                     # steps_per_epoch=len(train_data) // BATCH_SIZE,
     #                     epochs=EPOCHS,
-    #                     class_weight=class_weight,
     #                     verbose=1)
+    history = model.fit(train_data, train_labels, batch_size=BATCH_SIZE,
+                        validation_data=(val_data, val_labels),
+                        epochs=EPOCHS,
+                        # class_weight=class_weight,
+                        callbacks=[earlyStop],
+                        verbose=1)
 
     return history
+
+
+# Test model's effectiveness
+def testModel(model, test_data, test_labels):
+    loss, accuracy = model.evaluate(test_data, test_labels, verbose=1)
+    print(f"Evaluation Loss: {loss:.4f}")
+    print(f"Evaluation Accuracy: {accuracy:.4f}")
+
+    predictions = model.predict(test_data)
+    predicted_labels = np.argmax(predictions, axis=1)
+
+    for i in range(10):
+        rand = random.randint(0, len(test_data) - 1)
+        plot.imshow(test_data[rand])
+
+        # Convert to char if applicable
+        predicted_label = int(predicted_labels[rand])
+        if predicted_label > 9:
+            predicted_label = chr(predicted_label - 9 + 64)
+
+        plot.title(f"Label: {predicted_label}")
+        plot.show()
+
+# Save the model's trained state for later
+def saveModel(model):
+    model.save("OCR_model.h5")
 
 
 # Output a graph of the accuracy and loss resulting from training
@@ -172,18 +211,24 @@ def plotResults(history):
 
 # Testing
 if __name__ == "__main__":
-    (digitData, digitLabels) = load_mnist_data()
-    (capitalAzData, capitalAzLabels) = load_az_data("data/A_Z Handwritten Data.csv")
+    (digitData, digitLabels, testDigitData, testDigitLabels) = load_mnist_data()
+    (capitalAzData, capitalAzLabels, testAzData, testAzLabels) = load_az_data("data/A_Z Handwritten Data.csv")
 
     # Shift the A-Z to occupy 10-35 instead, so that they don't interfere with digits 0-9
     capitalAzLabels += 10
+    testAzLabels += 10
 
     (data, labels) = combineData(digitData, digitLabels, capitalAzData, capitalAzLabels)
+    (test_data, test_labels) = combineData(testDigitData, testDigitLabels, testAzData, testAzLabels)
+
     classWeight = weighClasses(labels)
     (train_data, val_data, train_labels, val_labels) = train_test_split(data, labels, test_size=0.2, stratify=labels, random_state=42)
 
     model = buildModel()
     history = trainModel(model, train_data, train_labels, val_data, val_labels, classWeight)
+    testModel(model, test_data, test_labels)
 
     plotResults(history.history)
+
+    saveModel(model)
 
