@@ -14,7 +14,7 @@ import random
 
 # Constants
 NUM_LABELS = 36
-EPOCHS = 50
+EPOCHS = 30
 BATCH_SIZE = 32
 
 # Global label binarizer/encoder
@@ -113,7 +113,7 @@ def buildModel():
     model.add(MaxPooling2D())
     model.add(Conv2D(32, (3, 3), 1, activation="relu", kernel_regularizer=l2(0.01)))
     model.add(MaxPooling2D())
-    model.add(Conv2D(16, (3, 3), 1, activation="relu"))
+    model.add(Conv2D(64, (3, 3), 1, activation="relu"))
     model.add(MaxPooling2D())
 
     model.add(Flatten())
@@ -138,7 +138,7 @@ def trainModel(model, train_data, train_labels, val_data, val_labels, class_weig
     # Implement early stopping
     earlyStop = EarlyStopping(
         monitor="val_loss",
-        patience=3,
+        patience=4,
         restore_best_weights=True
     )
 
@@ -150,7 +150,7 @@ def trainModel(model, train_data, train_labels, val_data, val_labels, class_weig
     history = model.fit(train_data, train_labels, batch_size=BATCH_SIZE,
                         validation_data=(val_data, val_labels),
                         epochs=EPOCHS,
-                        # class_weight=class_weight,
+                        class_weight=class_weight,
                         callbacks=[earlyStop],
                         verbose=1)
 
@@ -167,11 +167,11 @@ def testModel(model, test_data, test_labels):
     predicted_labels = np.argmax(predictions, axis=1)
 
     for i in range(10):
-        rand = random.randint(0, len(test_data) - 1)
-        plot.imshow(test_data[rand])
+        # rand = random.randint(0, len(test_data) - 1)
+        plot.imshow(test_data[i])
 
         # Convert to char if applicable
-        predicted_label = int(predicted_labels[rand])
+        predicted_label = int(predicted_labels[i])
         if predicted_label > 9:
             predicted_label = chr(predicted_label - 9 + 64)
 
@@ -180,12 +180,12 @@ def testModel(model, test_data, test_labels):
 
 # Save the model's trained state for later
 def saveModel(model):
-    model.save("OCR_model.h5")
+    model.save("OCR_model_weighted.h5")
 
 
 # Output a graph of the accuracy and loss resulting from training
 def plotResults(history):
-    epochs = range(1, EPOCHS + 1)
+    epochs = range(1, len(history["accuracy"]) + 1)
 
     # Accuracy
     plot.figure(figsize=(12, 5))
@@ -221,11 +221,11 @@ if __name__ == "__main__":
     (data, labels) = combineData(digitData, digitLabels, capitalAzData, capitalAzLabels)
     (test_data, test_labels) = combineData(testDigitData, testDigitLabels, testAzData, testAzLabels)
 
-    classWeight = weighClasses(labels)
     (train_data, val_data, train_labels, val_labels) = train_test_split(data, labels, test_size=0.2, stratify=labels, random_state=42)
+    classWeights = weighClasses(train_labels)
 
     model = buildModel()
-    history = trainModel(model, train_data, train_labels, val_data, val_labels, classWeight)
+    history = trainModel(model, train_data, train_labels, val_data, val_labels, classWeights)
     testModel(model, test_data, test_labels)
 
     plotResults(history.history)
