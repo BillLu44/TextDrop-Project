@@ -109,16 +109,16 @@ def weighClasses(labels):
 def buildModel():
     model = Sequential()
 
-    model.add(Conv2D(16, (3, 3), 1, activation="relu", input_shape=(28, 28, 1), kernel_regularizer=l2(0.01)))
+    model.add(Conv2D(16, (3, 3), 1, activation="relu", input_shape=(28, 28, 1)))
     model.add(MaxPooling2D())
-    model.add(Conv2D(32, (3, 3), 1, activation="relu", kernel_regularizer=l2(0.01)))
+    model.add(Conv2D(32, (3, 3), 1, activation="relu"))
     model.add(MaxPooling2D())
     model.add(Conv2D(64, (3, 3), 1, activation="relu"))
     model.add(MaxPooling2D())
 
     model.add(Flatten())
-    model.add(Dense(128, activation="relu", kernel_regularizer=l2(0.01)))
-    model.add(Dense(NUM_LABELS, activation="softmax", kernel_regularizer=l2(0.01)))
+    model.add(Dense(128, activation="relu"))
+    model.add(Dense(NUM_LABELS, activation="softmax"))
 
     model.compile("adam", loss="categorical_crossentropy", metrics=["accuracy"])
     return model
@@ -180,7 +180,7 @@ def testModel(model, test_data, test_labels):
 
 # Save the model's trained state for later
 def saveModel(model):
-    model.save("OCR_model_weighted.h5")
+    model.save("OCR_model_pure1.h5")
 
 
 # Output a graph of the accuracy and loss resulting from training
