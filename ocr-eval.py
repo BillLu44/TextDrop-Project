@@ -3,11 +3,12 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import load_model
 import matplotlib.pyplot as plot
+from boundingbox import load_data
 
 # Load the test data (blackboard)
 def loadTestData():
     print("Loading test data...")
-    data = []
+    data = load_data("test_image/TestImage2.JPG")
 
     # Add a channel dimension (decrease dimension of data by 1), then scale pixel values to [0, 1] instead of [0, 255]
     data = np.expand_dims(data, axis=-1)
@@ -18,7 +19,7 @@ def loadTestData():
 
 # Load the saved, trained model
 def loadModel():
-    return load_model("OCR_model.h5")
+    return load_model("models/OCR_model_pure_best.h5")
 
 
 # Evaluate the model's effectiveness on the test data
@@ -44,4 +45,5 @@ def evalModel(model, test_data):
 if __name__ == "__main__":
     data = loadTestData()
     model = loadModel()
+    evalModel(model, data)
 
