@@ -81,5 +81,3 @@ def load_data(img_path):
                 else:
                     vis[x, y] = 1
     return data
-
-print(load_data("test_image/TestImage2.JPG"))
