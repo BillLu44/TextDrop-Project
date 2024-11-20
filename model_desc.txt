@@ -1,0 +1,26 @@
+***OCR_model_aug.h5:        BEST ONE SO FAR
+- Data Augmentation
+
+OCR_model_aug_1.h5:
+- Data Augmentation
+- Sample weights
+
+OCR_model_aug_2.h5:
+- Data Augmentation
+- 5 Kernel Regularizers 0.01
+
+OCR_model_aug_3.h5:
+- Data Augmentation
+- 4 Kernel Regularizers 0.01
+
+OCR_model_weighted_1.h5:
+- 4 Kernel Regularizers 0.01
+- Class weights
+
+OCR_model_weighted_2.h5:
+- 4 Kernel Regularizers 0.001
+- Class weights
+
+OCR_model_aug_4.h5:
+- Data Augmentation (with brightness varying)
+- 4 Kernel Regularizers 0.001
