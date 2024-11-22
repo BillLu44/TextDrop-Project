@@ -2,6 +2,8 @@ from pylatex import Document, Section, Package, NoEscape
 
 # Constants
 OUTPUT_PATH = "output.pdf"
+PAGE_WIDTH = 297
+PAGE_HEIGHT = 210
 
 # Add characters to the PDF by their coordinates
 # Below is the legend of styles:
@@ -21,10 +23,10 @@ def setup_doc(title):
 
     # Use the TikZ package to place characters in specific coordinates
     doc.packages.append(Package("tikz"))
+    doc.packages.append(Package('geometry', options=['a4paper', 'landscape']))
     doc.preamble.append(NoEscape(r"\usepackage[margin=1in]{geometry}"))
     # doc.preamble.append(NoEscape(r'\renewcommand{\familydefault}{\ttdefault}'))
-    doc.append(NoEscape(r"\begin{tikzpicture}[scale=0.5]"))
-
+    doc.append(NoEscape(r"\begin{tikzpicture}[scale=0.1, yscale = -1]"))
     return doc
 
 
