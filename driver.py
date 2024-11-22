@@ -4,7 +4,7 @@ from boundingbox import load_data
 from processor import image_processor
 from ocr_eval import load_model
 from ocr_eval import evalModel
-from pdfcreator import renderPDF
+from pdf_gen import render_pdf
 
 def createPDF(img_path, model_path):
 
@@ -30,7 +30,7 @@ def createPDF(img_path, model_path):
 
     if(labels_count == boxes_count):
         pdfData = np.append(np.reshape(predicted_labels, (labels_count, 1)), boxes, axis = 1)
-        renderPDF(pdfData, Twidth, Theight)
+        render_pdf(pdfData, Twidth, Theight)
         # print(pdfData)
         # createPDF(pdfData, Twidth, Theight)
     else :
