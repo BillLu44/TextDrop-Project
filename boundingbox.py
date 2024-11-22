@@ -75,6 +75,7 @@ def load_data(gray_image):
     vis = np.zeros((height, width), dtype = 'int32')
     threshold = 220
     data = np.zeros((0, 28, 28), dtype = 'float32')
+    boxes = np.zeros((0, 5), dtype = 'int32')
 
     # Loop through image by pixel (every ten pixels and hope you hit all letters)
     for x in range(0, height, 10):
@@ -87,8 +88,9 @@ def load_data(gray_image):
                     # Letters are typically 600 to 3000 pixels, this minimized garbage components in data
                     if(box[4] >= 200 and box[4] <= 5000):
                         data = np.append(data, makeNNdata(box, connectedComp, gray_image, vis), axis = 0)
+                        boxes = np.append(boxes, np.reshape(box, (1,5)), axis = 0)
 
                     connectedComp = connectedComp + 1
                 else:
                     vis[x, y] = 1
-    return data
+    return (boxes, data)

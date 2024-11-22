@@ -58,16 +58,19 @@ def evalModel(model, test_data):
     predictions = model.predict(test_data)
     predicted_labels = np.argmax(predictions, axis=1)
 
-    for i in range(len(test_data)):
-        plot.imshow(test_data[i])
+    # temporarily commented out
+    # for i in range(len(test_data)):
+    #     plot.imshow(test_data[i])
 
-        # Convert to char if applicable
-        predicted_label = int(predicted_labels[i])
-        if predicted_label > 9:
-            predicted_label = chr(predicted_label - 9 + 64) # 65 is the ASCII for A
+    #     # Convert to char if applicable
+    #     predicted_label = int(predicted_labels[i])
+    #     if predicted_label > 9:
+    #         predicted_label = chr(predicted_label - 9 + 64) # 65 is the ASCII for A
 
-        plot.title(f"Prediction: {predicted_label}")
-        plot.show()
+    #     plot.title(f"Prediction: {predicted_label}")
+    #     plot.show()
+
+    return predicted_labels
 
 # No longer needed with driver.py implemented
 # # Driver code
