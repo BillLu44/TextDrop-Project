@@ -29,7 +29,7 @@ def renderPDF(pdfData, Twidth, Theight):
     for data in pdfData:
         r: Rectangle = Rectangle(
             Decimal(data[4] * pageWidth / Twidth),                # x: 0 + page_margin
-            Decimal(data[3] * pageHeight / Theight),    # y: page_height - page_margin - height_of_textbox
+            Decimal(pageHeight - data[1] * pageHeight / Theight),    # y: page_height - page_margin - height_of_textbox
             Decimal((data[2] - data[4]) * pageWidth / Twidth),      # width: page_width - 2 * page_margin
             Decimal((data[1] - data[3]) * pageHeight / Theight),               # height
         )
