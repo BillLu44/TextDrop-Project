@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.9.16)  22 NOV 2024 17:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.9.7)  24 NOV 2024 16:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**"C:/My Stuff/Education/SE101/se-101-project/test.pdf.tex"
-(C:/My Stuff/Education/SE101/se-101-project/test.pdf.tex
+**C:/Users/Gsprg/OneDrive/Documents/School/SE101/se-101-project/test.pdf.tex
+(C:/Users/Gsprg/OneDrive/Documents/School/SE101/se-101-project/test.pdf.tex
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
 (C:\Users\Gsprg\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
@@ -555,6 +555,11 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
+
+Overfull \hbox (41.47052pt too wide) in paragraph at lines 40--41
+[][] 
+ []
+
 [1
 
 {C:/Users/Gsprg/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/Gspr
@@ -569,16 +574,16 @@ L3 programming layer <2024-01-04>
  ) 
 Here is how much of TeX's memory you used:
  12758 strings out of 474486
- 265872 string characters out of 5743755
+ 265999 string characters out of 5743756
  1932542 words of memory out of 5000000
  34835 multiletter control sequences out of 15000+600000
  567815 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 102i,6n,107p,475b,539s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 102i,6n,107p,492b,539s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Gsprg/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pf
 b><C:/Users/Gsprg/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb
 >
-Output written on test.pdf.pdf (1 page, 45299 bytes).
+Output written on test.pdf.pdf (1 page, 43314 bytes).
 PDF statistics:
  20 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

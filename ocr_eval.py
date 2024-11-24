@@ -25,6 +25,32 @@ def padded_img(img, amount):
 
     return paddedImg
 
+
+# Turn up the contrast of the image to match training data
+# amount: How much contrast should be added
+# grid_size: Size of each mini-grid in the dividing step of CLAHE.
+#            Smaller = finer details, greater = smoother effect
+def contrast_img(img, amount, grid_size):
+    # Need to convert pixel values to integers for CLAHE. First, round the decimal value.
+    img = np.rint(img)
+    img = np.clip(img, 0, 255)
+    img = img.astype("uint8")
+
+    clahe = cv2.createCLAHE(clipLimit=amount, tileGridSize=grid_size)
+    contrasted_img = clahe.apply(img)
+
+    # Turn it back to float32
+    contrasted_img = contrasted_img.astype("float32")
+    return contrasted_img
+
+
+# Preprocess the test images by adding padding and turning up contrast
+def process_img(img, pad_amount, contrast_amount, grid_size):
+    img = padded_img(img, pad_amount)
+    img = contrast_img(img, contrast_amount, grid_size)
+    return img
+
+
 # No longer needed with driver.py implemented
 # # Load the test data (blackboard)
 # def loadTestData():
@@ -50,7 +76,7 @@ def loadModel(model_path):
 # Test model's effectiveness
 def evalModel(model, test_data):
 
-    test_data = np.array([padded_img(img, 8) for img in test_data])
+    test_data = np.array([process_img(img, 9, 3.0, (1, 1)) for img in test_data])
 
     test_data = np.expand_dims(test_data, axis=-1)
     test_data /= 255.0
