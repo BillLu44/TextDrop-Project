@@ -1,10 +1,11 @@
-from pylatex import Document, Section, Package, NoEscape
+from pylatex import Document, Package, NoEscape
 import numpy as np
 
 # Constants
 OUTPUT_PATH = "output.pdf"
 PAGE_WIDTH = 246.2
 PAGE_HEIGHT = 159.2
+MM_TO_PT = 2.835
 
 def get_style(box):
     if(box[1] - box[3] > 100):
@@ -29,9 +30,11 @@ def add_content(doc, pdfData, Bwidth, Bheight):
         if(data[0] > 9):
             char = chr(data[0] - 9 + 64)
         else:
-            char = chr(data[0] + '0')
+            char = chr(data[0] + 48)
+
+        
         if style == 'H':
-            doc.append(NoEscape(fr"\node[font=\bfseries\Large] at ({data[4] / Bwidth * PAGE_WIDTH},{data[3] / Bheight * PAGE_HEIGHT}) {{{data[0]}}};"))
+            doc.append(NoEscape(fr"\node[font=\bfseries\Large] at ({data[4] / Bwidth * PAGE_WIDTH},{data[3] / Bheight * PAGE_HEIGHT}) {{{char}}};"))
         elif style == 'N':
             doc.append(NoEscape(fr"\node at ({data[4] / Bwidth * PAGE_WIDTH},{data[3] / Bheight * PAGE_HEIGHT}) {{{char}}};"))
 
