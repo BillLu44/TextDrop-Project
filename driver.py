@@ -6,6 +6,13 @@ from ocr_eval import load_model
 from ocr_eval import evalModel
 from pdf_gen import render_pdf
 
+# Global variable for the current number of characters on the board
+boxes_count = 0
+
+# Gets the number of characters found
+def get_num_characters():
+    return boxes_count
+
 def createPDF(img_path, model_path):
 
     # processor.py is not working for bad test images
@@ -26,6 +33,7 @@ def createPDF(img_path, model_path):
     predicted_labels = evalModel(model, data)
 
     labels_count = predicted_labels.shape[0]
+    global boxes_count
     boxes_count = boxes.shape[0]
 
     if(labels_count == boxes_count):

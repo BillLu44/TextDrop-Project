@@ -43,12 +43,12 @@ def add_content(doc, pdfData, Bwidth, Bheight):
 
 # Performs an initial setup for the LaTeX PDF, including the title and other settings
 def setup_doc(title):
-    doc = Document(documentclass='article')
+    doc = Document(documentclass='article', geometry_options={'a4paper', 'landscape', 'margin=1in'})
 
     # Use the TikZ package to place characters in specific coordinates
     doc.packages.append(Package("tikz"))
-    doc.packages.append(Package('geometry', options=['a4paper', 'landscape']))
-    doc.preamble.append(NoEscape(r"\usepackage[margin=1in]{geometry}"))
+    # doc.packages.append(Package('geometry', options=['a4paper', 'landscape']))
+    # doc.preamble.append(NoEscape(r"\usepackage[margin=1in]{geometry}"))
     # doc.preamble.append(NoEscape(r'\renewcommand{\familydefault}{\ttdefault}'))
     doc.append(NoEscape(r"\begin{tikzpicture}[scale=0.1, yscale = -1]"))
     return doc
