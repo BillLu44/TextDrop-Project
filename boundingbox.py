@@ -1,5 +1,8 @@
 import cv2
 import numpy as np
+import sys
+
+sys.setrecursionlimit(10000)
 
 # dfs for detecting maximal connected component
 def dfs(x, y, connectedCmp, width, height, gray_image, vis, threshold):
