@@ -81,6 +81,7 @@ def setup_doc(title):
 
     # Use the TikZ package to place characters in specific coordinates
     doc.packages.append(Package("tikz"))
+    doc.preamble.append(NoEscape(r"\pagenumbering{gobble}"))
     # doc.packages.append(Package('geometry', options=['a4paper', 'landscape']))
     # doc.preamble.append(NoEscape(r"\usepackage[margin=1in]{geometry}"))
     # doc.preamble.append(NoEscape(r'\renewcommand{\familydefault}{\ttdefault}'))
