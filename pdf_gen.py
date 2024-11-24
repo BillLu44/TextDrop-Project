@@ -29,7 +29,7 @@ def add_content(doc, pdfData, Bwidth, Bheight):
         if(data[0] > 9):
             char = chr(data[0] - 9 + 64)
         else:
-            char = chr(data[0] + '0')
+            char = chr(data[0] + 48)
         if style == 'H':
             doc.append(NoEscape(fr"\node[font=\bfseries\Large] at ({data[4] / Bwidth * PAGE_WIDTH},{data[3] / Bheight * PAGE_HEIGHT}) {{{data[0]}}};"))
         elif style == 'N':
