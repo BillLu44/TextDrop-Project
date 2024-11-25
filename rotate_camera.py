@@ -45,7 +45,6 @@ def start_motor():
         current_count = get_character_count()
 
         print(f"Number of total characters on chalkboard {position}: {current_count}")
-        time.sleep(30)  # Check count every 30 seconds
 
         # STOP ROTATING - Lecture completed
         # Stop rotating if 
