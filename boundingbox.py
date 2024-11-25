@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import sys
+import matplotlib.pyplot as plt
 
 sys.setrecursionlimit(10000)
 
@@ -60,6 +61,12 @@ def makeNNdata(box, connectedCmp, gray_image, vis):
     squared[(s - boundedH) // 2: (s - boundedH) // 2 + boundedH, (s - boundedW) // 2: (s - boundedW) // 2 + boundedW] = bounded
     nnBox = cv2.resize(squared, (28, 28), cv2.INTER_AREA)
     nnBox = np.reshape(nnBox, (1, 28, 28))
+
+    # debugging code
+    # plt.imshow(np.reshape(nnBox, (28, 28)))
+    # plt.title("box")
+    # plt.show()
+
     return nnBox
 
     # debugging code
@@ -76,7 +83,7 @@ def load_data(gray_image):
     connectedComp = 2
     # Codes: 0 means not visited, 1 means does not exceed threshold, >= 2 means visited and vis[x][y] denotes which connected component (x, y) is in
     vis = np.zeros((height, width), dtype = 'int32')
-    threshold = 220
+    threshold = 150
     data = np.zeros((0, 28, 28), dtype = 'float32')
     boxes = np.zeros((0, 5), dtype = 'int32')
 
@@ -97,3 +104,4 @@ def load_data(gray_image):
                 else:
                     vis[x, y] = 1
     return (boxes, data)
+

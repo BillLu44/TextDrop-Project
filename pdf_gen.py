@@ -50,7 +50,7 @@ def realign_chars(pdfData, y_tolerance):
 # 'N': Normal text.
 def add_content(doc, pdfData, Bwidth, Bheight):
 
-    pdfData = realign_chars(pdfData, 100)
+    pdfData = realign_chars(pdfData, 10)
 
     # for char, (x, y), style in zip(chars, coords, styles):
     #     if style == 'H':
