@@ -6,9 +6,11 @@ OUTPUT_PATH = "output.pdf"
 PAGE_WIDTH = 246.2
 PAGE_HEIGHT = 159.2
 MM_TO_PT = 2.835
+HEADER_MIN_HEIGHT = 70
+LINE_TOLERANCE = 30
 
 def get_style(box):
-    if(box[1] - box[3] > 100):
+    if(box[1] - box[3] > HEADER_MIN_HEIGHT):
         return 'H'
     else:
         return 'N'
@@ -50,7 +52,7 @@ def realign_chars(pdfData, y_tolerance):
 # 'N': Normal text.
 def add_content(doc, pdfData, Bwidth, Bheight):
 
-    pdfData = realign_chars(pdfData, 10)
+    pdfData = realign_chars(pdfData, LINE_TOLERANCE)
 
     # for char, (x, y), style in zip(chars, coords, styles):
     #     if style == 'H':

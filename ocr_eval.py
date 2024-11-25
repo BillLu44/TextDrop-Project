@@ -83,7 +83,7 @@ def loadModel(model_path):
 # Test model's effectiveness
 def evalModel(model, test_data):
 
-    test_data = np.array([process_img(img, 8, 5.0, (1, 1), 2) for img in test_data])
+    test_data = np.array([process_img(img, 7, 5.0, (1, 1), 2) for img in test_data])    # 7 for smaller/more subtle writing, 8 for larger writing
 
     test_data = np.expand_dims(test_data, axis=-1)
     test_data /= 255.0
@@ -92,16 +92,16 @@ def evalModel(model, test_data):
     predicted_labels = np.argmax(predictions, axis=1)
 
     # temporarily commented out
-    for i in range(len(test_data)):
-        plot.imshow(test_data[i])
+    # for i in range(len(test_data)):
+    #     plot.imshow(test_data[i])
 
-        # Convert to char if applicable
-        predicted_label = int(predicted_labels[i])
-        if predicted_label > 9:
-            predicted_label = chr(predicted_label - 9 + 64) # 65 is the ASCII for A
+    #     # Convert to char if applicable
+    #     predicted_label = int(predicted_labels[i])
+    #     if predicted_label > 9:
+    #         predicted_label = chr(predicted_label - 9 + 64) # 65 is the ASCII for A
 
-        plot.title(f"Prediction: {predicted_label}")
-        plot.show()
+    #     plot.title(f"Prediction: {predicted_label}")
+    #     plot.show()
 
     return predicted_labels
 

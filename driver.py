@@ -40,6 +40,6 @@ def createPDF(img_path, model_path):
 
 
 # Temporary static paths
-img_path = "test_image/from_pi (6).jpg"
-model_path = "models/OCR_model_aug.h5"
+img_path = "test_image/2.jpg"
+model_path = "models/OCR_model_aug_5.h5"
 createPDF(img_path, model_path)

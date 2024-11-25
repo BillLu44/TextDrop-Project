@@ -24,3 +24,6 @@ OCR_model_weighted_2.h5:
 OCR_model_aug_4.h5:
 - Data Augmentation (with brightness varying)
 - 4 Kernel Regularizers 0.001
+
+OCR_model_aug_5.h5:
+- Data Augmentation (more zoom varying)
