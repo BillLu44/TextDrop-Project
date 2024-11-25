@@ -44,10 +44,17 @@ def contrast_img(img, amount, grid_size):
     return contrasted_img
 
 
+# Artificially thicken the characters to match the training data
+def dilated_img(img, amount):
+    kernel = np.ones((amount, amount), np.uint8)
+    return cv2.dilate(img, kernel, iterations=1)
+
+
 # Preprocess the test images by adding padding and turning up contrast
-def process_img(img, pad_amount, contrast_amount, grid_size):
+def process_img(img, pad_amount, contrast_amount, grid_size, dilate_amount):
     img = padded_img(img, pad_amount)
     img = contrast_img(img, contrast_amount, grid_size)
+    img = dilated_img(img, dilate_amount)
     return img
 
 
@@ -76,7 +83,7 @@ def loadModel(model_path):
 # Test model's effectiveness
 def evalModel(model, test_data):
 
-    test_data = np.array([process_img(img, 7, 5.0, (1, 1)) for img in test_data])
+    test_data = np.array([process_img(img, 8, 5.0, (1, 1), 2) for img in test_data])
 
     test_data = np.expand_dims(test_data, axis=-1)
     test_data /= 255.0
