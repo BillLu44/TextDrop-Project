@@ -6,7 +6,14 @@ from ocr_eval import load_model
 from ocr_eval import evalModel
 from pdf_gen import render_pdf
 
+boxes_count = 0
+
+def get_character_count():
+    return boxes_count
+
 def createPDF(img_path, model_path):
+
+    
 
     # processor.py is not working for bad test images
     # Call image preprocessing, convert to gray scale for boxbounding
@@ -26,6 +33,7 @@ def createPDF(img_path, model_path):
     predicted_labels = evalModel(model, data)
 
     labels_count = predicted_labels.shape[0]
+    global boxes_count
     boxes_count = boxes.shape[0]
 
     if(labels_count == boxes_count):
