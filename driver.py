@@ -14,8 +14,6 @@ def get_character_count():
 
 def createPDF(img_path, model_path):
 
-    start_motor()
-
     # processor.py is not working for bad test images
     # Call image preprocessing, convert to gray scale for boxbounding
     grayScale_img = cv2.cvtColor(board_extractor(img_path), cv2.COLOR_BGR2GRAY)
@@ -45,6 +43,8 @@ def createPDF(img_path, model_path):
     else :
         print(labels_count)
         print(boxes_count)
+
+    return start_motor()    # If true, continue the picture-taking loop. If false, stop it
 
 
 # Temporary static paths
