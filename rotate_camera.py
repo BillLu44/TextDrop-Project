@@ -1,5 +1,6 @@
 import time
-from servo_motor import SetAngle, leanup
+from servo_motor import SetAngle, Cleanup
+from driver import get_character_count
 
 # Define the positions of each chalkboard in STC
 # Update positions while testings
@@ -32,11 +33,10 @@ def save_previous_count(count):
         file.write(str(count))
 
 # William's code will provide the number of TOTAL characters on each chalkboard
-def main():
+def start_motor():
     time.sleep(2)  # Begin camera movement after 2 seconds
     previous_count = read_previous_count()  # Initialize the previous count
     current_count = 0    # Initialize the current count
-    tolerance = 10       # To account for miscounting of characters
     position = 1         # Start at position 1 (0 degrees)
     no_change = 0
 
@@ -61,7 +61,7 @@ def main():
 
         # ROTATE TO NEXT POSITION
         # Check if the count has stopped changing based on tolerance
-        if abs(current_count - previous_count) < tolerance:
+        if abs(current_count - previous_count) == 0:
             print(f"Count stopped changing. Rotating.")
             # Move to the next position in clockwise motion
             position = position % 4 + 1
@@ -73,7 +73,7 @@ def main():
             # Exit the loop or break if you only want one rotation after detecting stability
             break
 
-    cleanup()  # Clean up GPIO and stop PWM
+    Cleanup()  # Clean up GPIO and stop PWM
 
 if __name__ == "__main__":
     main()

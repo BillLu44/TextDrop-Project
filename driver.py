@@ -5,6 +5,7 @@ from processor import board_extractor
 from ocr_eval import load_model
 from ocr_eval import evalModel
 from pdf_gen import render_pdf
+from rotate_camera import start_motor
 
 boxes_count = 0
 
@@ -13,7 +14,7 @@ def get_character_count():
 
 def createPDF(img_path, model_path):
 
-    
+    start_motor()
 
     # processor.py is not working for bad test images
     # Call image preprocessing, convert to gray scale for boxbounding
@@ -44,7 +45,6 @@ def createPDF(img_path, model_path):
     else :
         print(labels_count)
         print(boxes_count)
-
 
 
 # Temporary static paths
