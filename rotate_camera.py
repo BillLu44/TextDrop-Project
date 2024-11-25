@@ -41,7 +41,6 @@ def start_motor():
     no_change = 0
 
     while True:
-        # GET CODE FROM WILLIAM
         current_count = get_character_count()
 
         print(f"Number of total characters on chalkboard {position}: {current_count}")
@@ -56,7 +55,8 @@ def start_motor():
         # Check if we've reached the threshold of consecutive 0 character counts
         if no_characters_counter >= 5:  # If we detect 0 characters for 5 checks (e.g., 50 seconds)
             print("No change detected after 5 pictures. Stopping rotation.")
-            break # end program
+            Cleanup()   # Clean up GPIO and stop PWM
+            return False
 
         # ROTATE TO NEXT POSITION
         # Check if the count has stopped changing based on tolerance
@@ -71,8 +71,8 @@ def start_motor():
 
             # Exit the loop or break if you only want one rotation after detecting stability
             break
-
-    Cleanup()  # Clean up GPIO and stop PWM
+        
+    return True
 
 if __name__ == "__main__":
     main()
