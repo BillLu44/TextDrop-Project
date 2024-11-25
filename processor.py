@@ -7,7 +7,7 @@ def board_extractor(image_path):
     # Read the image
     image = cv2.imread(image_path)
 
-    # Gaussian blur with kernel size 17x17
+    # Gaussian blur with kernel size 13x13
     blurred = cv2.GaussianBlur(image, (13, 13), 0)
 
     # Define the target color in RGB (OpenCV uses BGR, so reverse it)
