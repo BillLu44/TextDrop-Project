@@ -75,4 +75,4 @@ def start_motor():
     return True
 
 if __name__ == "__main__":
-    main()
+    start_motor()
