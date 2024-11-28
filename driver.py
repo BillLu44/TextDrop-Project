@@ -56,11 +56,11 @@ def flask_startup():
 
 if __name__ == '__main__':
     # Temporary static paths
-    model_path = "models/OCR_model_aug_7.h5"
+    model_path = "models/OCR_model_aug_5.h5"
     #flask_thread = threading.Thread(target=flask_startup)
     #flask_thread.start()
     i = 0
-    while (True):
+    while (False):
         try:
             print("trying")
             x = requests.get('http://10.42.0.170:50100/take_picture', stream=True)
@@ -81,7 +81,8 @@ if __name__ == '__main__':
             # img_processing.join()
         
         except:
-            print("image fetch failed")
-            print()
+            # print("image fetch failed")
+            # print()
             time.sleep(10)
-        
+    
+    createPDF("test_image/IMG_1679.jpeg", model_path)

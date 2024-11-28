@@ -3,42 +3,49 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 
-sys.setrecursionlimit(10000)
-
-# DFS for detecting maximal connected component
+# dfs for detecting maximal connected component
 def dfs(x, y, connectedCmp, width, height, gray_image, vis, threshold):
 
-    # Declare bounding box and size of contained blob
+    # declare bounding box and size of contained blob
     box = [x, y, x, y, 1]
 
-    # Loop through nearby pixels
-    for i in range(-10, 11):
-        for j in range (-10, 11):
-            newX = x + i
-            newY = y + j
+    queue = []
+    queue.append([x, y])
+    sz = 1
 
-            # If adjacent pixel is in image and passes threshold and has not been previously visited, call dfs again
-            if(0 <= newX < height and 0 <= newY < width):
-                if(gray_image[newX, newY] > threshold and vis[newX, newY] == 0):
+    # loop through nearby pixels
+    while(sz > 0):
+        newCoord = queue.pop(0)
+        sz = sz - 1
+        for i in range(-10, 11):
+            for j in range (-10, 11):
+                
+                newX = newCoord[0] + i
+                newY = newCoord[1] + j
 
-                    # Label which connected component
-                    vis[newX, newY] = connectedCmp
+                # if adjacent pixel is in image and passes threshold and has not been previously visited, call dfs again
+                if(0 <= newX < height and 0 <= newY < width):
+                    if(gray_image[newX, newY] > threshold and vis[newX, newY] == 0):
 
-                    # Call dfs recursively
-                    newBox = dfs(newX, newY, connectedCmp, width, height, gray_image, vis, threshold)
-                    # Transfer bounding box data
-                    box[0] = max(box[0], newBox[0])
-                    box[1] = max(box[1], newBox[1])
-                    box[2] = min(box[2], newBox[2])
-                    box[3] = min(box[3], newBox[3])
-                    box[4] = box[4] + newBox[4]
+                        # label which connected component
+                        vis[newX, newY] = connectedCmp
 
-                    # Check to minimize runtime (letters are typically <3000 pixels)
-                    if(box[4] > 5000):
-                        return box
+                        # call dfs recursively
+                        queue.append([newX, newY])
+                        sz = sz + 1
+                        # transfer bounding box data
+                        box[0] = max(box[0], newX)
+                        box[1] = max(box[1], newY)
+                        box[2] = min(box[2], newX)
+                        box[3] = min(box[3], newY)
+                        box[4] = box[4] + 1
+
+                        # check to minimize runtime (letters are typically <3000 pixels)
+                        # if(box[4] > 5000):
+                        #     return box
     return box
 
-# Takes a bounding box and returns a data point of neural network
+# takes a bounding box and returns a data point of neural network
 def makeNNdata(box, connectedCmp, gray_image, vis):
 
     # make sub image
@@ -46,8 +53,8 @@ def makeNNdata(box, connectedCmp, gray_image, vis):
     boundedW = np.size(bounded, 1)
     boundedH = np.size(bounded, 0)
 
-    # Black out anything in bounding box that isn't the corredsponding connected component
-    # Whiten everything in correct component to maximize contrast
+    # black out anything in bounding box that isn't the corredsponding connected component
+    # whiten everything in correct component to maximize contrast
     for x in range(boundedH):
         for y in range(boundedW):
             if(vis[x + box[2] - 1, y + box[3] - 1] == connectedCmp):
@@ -76,6 +83,7 @@ def makeNNdata(box, connectedCmp, gray_image, vis):
     # plt.show()
 
 def load_data(gray_image):
+
     width = np.size(gray_image, 1)
     height = np.size(gray_image, 0)
 
@@ -96,12 +104,16 @@ def load_data(gray_image):
                     box = dfs(x, y, connectedComp, width, height, gray_image, vis, threshold)
 
                     # Letters are typically 600 to 3000 pixels, this minimized garbage components in data
-                    if(box[4] >= 200 and box[4] <= 5000):
+                    if(box[4] >= 600):
                         data = np.append(data, makeNNdata(box, connectedComp, gray_image, vis), axis = 0)
                         boxes = np.append(boxes, np.reshape(box, (1,5)), axis = 0)
 
                     connectedComp = connectedComp + 1
                 else:
                     vis[x, y] = 1
+
+    plt.imshow(vis)
+    plt.title("box")
+    plt.show()
     return (boxes, data)
 
