@@ -56,7 +56,7 @@ def flask_startup():
 
 if __name__ == '__main__':
     # Temporary static paths
-    model_path = "models/OCR_model_aug_5.h5"
+    model_path = "models/OCR_model_aug_7.h5"
     #flask_thread = threading.Thread(target=flask_startup)
     #flask_thread.start()
     i = 0
