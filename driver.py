@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 from boundingbox import load_data
 from processor import board_extractor
 from ocr_eval import loadModel
@@ -18,8 +19,7 @@ def get_character_count():
     return boxes_count
 
 def createPDF(img_path, model_path):
-
-    # processor.py is not working for bad test images
+    # Processor.py is not working for bad test images
     # Call image preprocessing, convert to gray scale for boxbounding
     grayScale_img = cv2.cvtColor(board_extractor(img_path), cv2.COLOR_BGR2GRAY)
 
@@ -52,19 +52,18 @@ def createPDF(img_path, model_path):
     #return start_motor()    # If true, continue the picture-taking loop. If false, stop it
 
 def flask_startup():
-    subprocess.run(["shell_scripts/client_script.bash"], shell=True)
+    subprocess.run(["shell_scripts/client_script_external_network.bash"], shell=True)
 
 if __name__ == '__main__':
     # Temporary static paths
-    #img_path = "test_image/2.jpg"
-    model_path = "models/OCR_model_aug_5.h5"
-    flask_thread = threading.Thread(target=flask_startup)
-    flask_thread.start()
+    model_path = "models/OCR_model_aug_7.h5"
+    #flask_thread = threading.Thread(target=flask_startup)
+    #flask_thread.start()
     i = 0
     while (True):
         try:
             print("trying")
-            x = requests.get('http://raspberrypi.local:50100/take_picture', stream=True)
+            x = requests.get('http://10.42.0.170:50100/take_picture', stream=True)
             if x.status_code == 200:
                 print("success")
                 i += 1
@@ -73,10 +72,16 @@ if __name__ == '__main__':
                     for chunk in x.iter_content(chunk_size=8192):
                         file.write(chunk)
             print("got here")
-            img_process_thread = threading.Thread(createPDF(img_path, model_path))
-            img_process_thread.start()
+            print(img_path)
+            print("skibdi")
+            # img_processing = threading.Thread(createPDF(img_path, model_path))
+            createPDF(img_path, model_path)
+            # img_processing.start()
             print("got here?")
-            img_process_thread.join()
+            # img_processing.join()
+        
         except:
             print("image fetch failed")
+            print()
             time.sleep(10)
+        

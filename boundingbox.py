@@ -5,40 +5,40 @@ import matplotlib.pyplot as plt
 
 sys.setrecursionlimit(10000)
 
-# dfs for detecting maximal connected component
+# DFS for detecting maximal connected component
 def dfs(x, y, connectedCmp, width, height, gray_image, vis, threshold):
 
-    # declare bounding box and size of contained blob
+    # Declare bounding box and size of contained blob
     box = [x, y, x, y, 1]
 
-    # loop through nearby pixels
+    # Loop through nearby pixels
     for i in range(-10, 11):
         for j in range (-10, 11):
             newX = x + i
             newY = y + j
 
-            # if adjacent pixel is in image and passes threshold and has not been previously visited, call dfs again
+            # If adjacent pixel is in image and passes threshold and has not been previously visited, call dfs again
             if(0 <= newX < height and 0 <= newY < width):
                 if(gray_image[newX, newY] > threshold and vis[newX, newY] == 0):
 
-                    # label which connected component
+                    # Label which connected component
                     vis[newX, newY] = connectedCmp
 
-                    # call dfs recursively
+                    # Call dfs recursively
                     newBox = dfs(newX, newY, connectedCmp, width, height, gray_image, vis, threshold)
-                    # transfer bounding box data
+                    # Transfer bounding box data
                     box[0] = max(box[0], newBox[0])
                     box[1] = max(box[1], newBox[1])
                     box[2] = min(box[2], newBox[2])
                     box[3] = min(box[3], newBox[3])
                     box[4] = box[4] + newBox[4]
 
-                    # check to minimize runtime (letters are typically <3000 pixels)
+                    # Check to minimize runtime (letters are typically <3000 pixels)
                     if(box[4] > 5000):
                         return box
     return box
 
-# takes a bounding box and returns a data point of neural network
+# Takes a bounding box and returns a data point of neural network
 def makeNNdata(box, connectedCmp, gray_image, vis):
 
     # make sub image
@@ -46,8 +46,8 @@ def makeNNdata(box, connectedCmp, gray_image, vis):
     boundedW = np.size(bounded, 1)
     boundedH = np.size(bounded, 0)
 
-    # black out anything in bounding box that isn't the corredsponding connected component
-    # whiten everything in correct component to maximize contrast
+    # Black out anything in bounding box that isn't the corredsponding connected component
+    # Whiten everything in correct component to maximize contrast
     for x in range(boundedH):
         for y in range(boundedW):
             if(vis[x + box[2] - 1, y + box[3] - 1] == connectedCmp):

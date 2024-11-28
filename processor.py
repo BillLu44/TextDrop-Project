@@ -1,10 +1,12 @@
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 # import imageio
 
 
 def board_extractor(image_path):
     # Read the image
+    Image = cv2.imread("test_image/IMG_1586.jpg")
     image = cv2.imread(image_path)
 
     # Gaussian blur with kernel size 13x13
@@ -157,8 +159,10 @@ def board_extractor(image_path):
         # cv2.imshow("Warped Perspective", warped)
 
         # print(f"Largest Contour Position: {max_fill_position}, Area: {max_area}")
-    return warped
-
+        return warped
+    else:
+        print("GARBAGE")
+        return Image
 
 # Show final results
 # cv2.imshow("Final Image", board_extractor("test_image/from_pi (6).jpg"))
