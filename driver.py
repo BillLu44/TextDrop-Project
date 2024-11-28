@@ -75,6 +75,7 @@ if __name__ == '__main__':
             print("got here")
             img_process_thread = threading.Thread(createPDF(img_path, model_path))
             img_process_thread.start()
+            print("got here?")
             img_process_thread.join()
         except:
             print("image fetch failed")

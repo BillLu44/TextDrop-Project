@@ -1,9 +1,9 @@
 #!/usr/bin/bash
 
 echo "Started client_script"
-#echo "Starting NetworkManager"
-#sudo systemctl start NetworkManager.service
-#sudo nmcli device wifi hotspot con-name Group18 ssid Group18 band bg password qw3rtyu1
+echo "Starting NetworkManager"
+sudo systemctl start NetworkManager.service
+sudo nmcli device wifi hotspot con-name Group18 ssid Group18 band bg password qw3rtyu1
 echo "Starting ssh"
 sshpass -p "se101" ssh Group18@raspberrypi.local << EOF
     echo "setup ssh"
