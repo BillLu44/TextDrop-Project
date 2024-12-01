@@ -7,7 +7,7 @@ PAGE_WIDTH = 246.2
 PAGE_HEIGHT = 159.2
 MM_TO_PT = 2.835
 HEADER_MIN_HEIGHT = 70
-LINE_TOLERANCE = 30
+LINE_TOLERANCE = 50
 
 def get_style(box):
     if(box[1] - box[3] > HEADER_MIN_HEIGHT):
@@ -21,15 +21,15 @@ def get_style(box):
 # y_tolerance: The maximum difference in y-values for characters to be considered "on the same line"
 def realign_chars(pdfData, y_tolerance):
 
-    # Sort the chars by minY in ascending order
-    pdfData = pdfData[np.argsort(pdfData[:, 3])]
+    # Sort the chars by maxY in ascending order
+    pdfData = pdfData[np.argsort(pdfData[:, 1])]
 
     # Separate the chars into lines
     lines = []
     prev_char = pdfData[0]
     curr_line = [pdfData[0]]
     for i in range(1, len(pdfData)):
-        if abs(pdfData[i, 3] - prev_char[3]) < y_tolerance:
+        if abs(pdfData[i, 1] - prev_char[1]) < y_tolerance:
             curr_line.append(pdfData[i])
         else:
             lines.append(curr_line)
@@ -37,11 +37,11 @@ def realign_chars(pdfData, y_tolerance):
         prev_char = pdfData[i]
     lines.append(curr_line) # Add the last line
 
-    # Set the yMin of each character in the line to the average
+    # Set the maxY of each character in the line to the average
     for line in lines:
-        y_avg = np.mean([char[3] for char in line])
+        y_avg = np.mean([char[1] for char in line])
         for char in line:
-            char[3] = y_avg
+            char[1] = y_avg
 
     return pdfData
 
@@ -70,9 +70,9 @@ def add_content(doc, pdfData, Bwidth, Bheight):
 
         
         if style == 'H':
-            doc.append(NoEscape(fr"\node[font=\bfseries\Large] at ({data[4] / Bwidth * PAGE_WIDTH},{data[3] / Bheight * PAGE_HEIGHT}) {{{char}}};"))
+            doc.append(NoEscape(fr"\node[font=\bfseries\Large] at ({data[4] / Bwidth * PAGE_WIDTH},{data[1] / Bheight * PAGE_HEIGHT}) {{{char}}};"))
         elif style == 'N':
-            doc.append(NoEscape(fr"\node at ({data[4] / Bwidth * PAGE_WIDTH},{data[3] / Bheight * PAGE_HEIGHT}) {{{char}}};"))
+            doc.append(NoEscape(fr"\node at ({data[4] / Bwidth * PAGE_WIDTH},{data[1] / Bheight * PAGE_HEIGHT}) {{{char}}};"))
 
 
 
@@ -87,7 +87,7 @@ def setup_doc(title):
     # doc.packages.append(Package('geometry', options=['a4paper', 'landscape']))
     # doc.preamble.append(NoEscape(r"\usepackage[margin=1in]{geometry}"))
     # doc.preamble.append(NoEscape(r'\renewcommand{\familydefault}{\ttdefault}'))
-    doc.append(NoEscape(r"\begin{tikzpicture}[scale=0.1, yscale = -1]"))
+    doc.append(NoEscape(r"\begin{tikzpicture}[scale=0.04, yscale = -1]"))
     return doc
 
 

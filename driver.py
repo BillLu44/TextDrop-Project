@@ -85,4 +85,4 @@ if __name__ == '__main__':
             # print()
             time.sleep(10)
     
-    createPDF("test_image/IMG_1679.jpeg", model_path)
+    createPDF("test_image/IMG_1681.jpg", model_path)
