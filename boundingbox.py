@@ -6,14 +6,14 @@ import matplotlib.pyplot as plt
 # dfs for detecting maximal connected component
 def dfs(x, y, connectedCmp, width, height, gray_image, vis, threshold):
 
-    # declare bounding box and size of contained blob
+    # Declare bounding box and size of contained blob
     box = [x, y, x, y, 1]
 
     queue = []
     queue.append([x, y])
     sz = 1
 
-    # loop through nearby pixels
+    # Loop through nearby pixels
     while(sz > 0):
         newCoord = queue.pop(0)
         sz = sz - 1
@@ -23,38 +23,38 @@ def dfs(x, y, connectedCmp, width, height, gray_image, vis, threshold):
                 newX = newCoord[0] + i
                 newY = newCoord[1] + j
 
-                # if adjacent pixel is in image and passes threshold and has not been previously visited, call dfs again
+                # If adjacent pixel is in image and passes threshold and has not been previously visited, call dfs again
                 if(0 <= newX < height and 0 <= newY < width):
                     if(gray_image[newX, newY] > threshold and vis[newX, newY] == 0):
 
-                        # label which connected component
+                        # Label which connected component
                         vis[newX, newY] = connectedCmp
 
-                        # call dfs recursively
+                        # Call dfs recursively
                         queue.append([newX, newY])
                         sz = sz + 1
-                        # transfer bounding box data
+                        # Transfer bounding box data
                         box[0] = max(box[0], newX)
                         box[1] = max(box[1], newY)
                         box[2] = min(box[2], newX)
                         box[3] = min(box[3], newY)
                         box[4] = box[4] + 1
 
-                        # check to minimize runtime (letters are typically <3000 pixels)
+                        # Check to minimize runtime (letters are typically <3000 pixels)
                         # if(box[4] > 5000):
                         #     return box
     return box
 
-# takes a bounding box and returns a data point of neural network
+# Takes a bounding box and returns a data point of neural network
 def makeNNdata(box, connectedCmp, gray_image, vis):
 
-    # make sub image
+    # Makes sub image
     bounded = np.copy(gray_image[box[2]-1:box[0]+1, box[3]-1:box[1]+1])
     boundedW = np.size(bounded, 1)
     boundedH = np.size(bounded, 0)
 
-    # black out anything in bounding box that isn't the corredsponding connected component
-    # whiten everything in correct component to maximize contrast
+    # Black out anything in bounding box that isn't the corredsponding connected component
+    # Whiten everything in correct component to maximize contrast
     for x in range(boundedH):
         for y in range(boundedW):
             if(vis[x + box[2] - 1, y + box[3] - 1] == connectedCmp):
@@ -87,7 +87,7 @@ def load_data(gray_image):
     width = np.size(gray_image, 1)
     height = np.size(gray_image, 0)
 
-    # declare threshold and visited array
+    # Declare threshold and visited array
     connectedComp = 2
     # Codes: 0 means not visited, 1 means does not exceed threshold, >= 2 means visited and vis[x][y] denotes which connected component (x, y) is in
     vis = np.zeros((height, width), dtype = 'int32')

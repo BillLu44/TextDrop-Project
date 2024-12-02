@@ -86,7 +86,7 @@ def evalModel(model, test_data):
     test_data = np.array([process_img(img, 7, 5.0, (3, 3), 2) for img in test_data])    # 7 for smaller/more subtle writing, 8 for larger writing
 
     test_data = np.expand_dims(test_data, axis=-1)
-    # test_data /= 255.0  # Comment this out for model aug_7
+    test_data /= 255.0  # Comment this out for model aug_7
 
     predictions = model.predict(test_data)
     predicted_labels = np.argmax(predictions, axis=1)

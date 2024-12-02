@@ -96,7 +96,9 @@ def render_pdf(pdfData, Bwidth, Bheight):
     add_content(doc, pdfData, Bwidth, Bheight)
 
     doc.append(NoEscape(r"\end{tikzpicture}"))
-    doc.generate_pdf("test.pdf", clean_tex=False, compiler="pdfLaTeX")
+    # doc.generate_pdf("test.pdf", clean_tex=False, compiler="pdfLaTeX")
+    doc.generate_pdf("test.pdf", clean_tex=False, compiler="latexmk", compiler_args=['-c'])
+
 
 
 # if __name__ == "__main__":
