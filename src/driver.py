@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from boundingbox import load_data
 from processor import board_extractor
 from ocr_eval import loadModel, evalModel, process_img
-import matplotlib.pyplot as plot
 from pdf_gen import setup_pdf, add_page, render_pdf
 #from rotate_camera import start_motor
 import subprocess
