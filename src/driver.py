@@ -31,6 +31,7 @@ def addPageToPDF(img_path, model_path):
     print("Loading test data...")
     boxes, data = load_data(grayScale_img)
 
+    # Call the neural network to identify characters
     print("Calling neural network...")
     model = loadModel(model_path)
     predicted_labels = evalModel(model, data)
@@ -39,10 +40,11 @@ def addPageToPDF(img_path, model_path):
     global boxes_count
     boxes_count = boxes.shape[0]
 
+    # If valid, add a new page in the PDF with these characters
     if(labels_count == boxes_count):
         pdfData = np.append(np.reshape(predicted_labels, (labels_count, 1)), boxes, axis = 1)
         add_page(pdfData, Twidth, Theight)
-    else :
+    else:
         print(labels_count)
         print(boxes_count)
 
@@ -56,34 +58,37 @@ def flask_startup():
 if __name__ == '__main__':
     # Temporary static paths
     model_path = "models/OCR_model_aug_5.h5"
+
+    # COMMENTED CODE FOR AUTOMATIC PICTURE-TAKING, WHICH IS NOT PART OF THE FINAL PRODUCT
     #flask_thread = threading.Thread(target=flask_startup)
     #flask_thread.start()
-    i = 0
-    while (False):
-        try:
-            print("trying")
-            x = requests.get('http://10.42.0.170:50100/take_picture', stream=True)
-            if x.status_code == 200:
-                print("success")
-                i += 1
-                img_path = os.path.join('img_dump', f"from_pi_{i}.jpg")
-                with open(img_path, "wb") as file:
-                    for chunk in x.iter_content(chunk_size=8192):
-                        file.write(chunk)
-            print("got here")
-            print(img_path)
-            print("skibdi")
-            # img_processing = threading.Thread(createPDF(img_path, model_path))
-            createPDF(img_path, model_path)
-            # img_processing.start()
-            print("got here?")
-            # img_processing.join()
+    # i = 0
+    # while (True):
+    #     try:
+    #         print("trying")
+    #         x = requests.get('http://10.42.0.170:50100/take_picture', stream=True)
+    #         if x.status_code == 200:
+    #             print("success")
+    #             i += 1
+    #             img_path = os.path.join('img_dump', f"from_pi_{i}.jpg")
+    #             with open(img_path, "wb") as file:
+    #                 for chunk in x.iter_content(chunk_size=8192):
+    #                     file.write(chunk)
+    #         print("got here")
+    #         print(img_path)
+    #         print("skibdi")
+    #         # img_processing = threading.Thread(addPageToPDF(img_path, model_path))
+    #         addPageToPDF(img_path, model_path)
+    #         # img_processing.start()
+    #         print("got here?")
+    #         # img_processing.join()
         
-        except:
-            # print("image fetch failed")
-            # print()
-            time.sleep(10)
+    #     except:
+    #         # print("image fetch failed")
+    #         # print()
+    #         time.sleep(10)
     
+    # Temporary fix (working code):
     setup_pdf()
     print("\n=====================FORMATTING BOARD 1=====================")
     addPageToPDF("test_image/BEST IMAGE 1.jpg", model_path)
