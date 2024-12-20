@@ -59,22 +59,6 @@ def process_img(img, pad_amount, contrast_amount, grid_size, dilate_amount):
     return img
 
 
-# No longer needed with driver.py implemented
-# # Load the test data (blackboard)
-# def loadTestData():
-#     print("Loading test data...")
-#     data = load_data("test_image/TestImage2.JPG")
-#     data = np.array([row.reshape(IMAGE_SIZE, IMAGE_SIZE) for row in data])
-
-#     data = np.array([padded_img(img, 8) for img in data])
-
-#     # Add a channel dimension (decrease dimension of data by 1), then scale pixel values to [0, 1] instead of [0, 255]
-#     data = np.expand_dims(data, axis=-1)
-#     data /= 255.0
-
-#     return data
-
-
 # Load the saved, trained model
 def loadModel(model_path):
     return load_model(model_path)
@@ -92,7 +76,7 @@ def evalModel(model, test_data):
     predictions = model.predict(test_data)
     predicted_labels = np.argmax(predictions, axis=1)
 
-    # temporarily commented out
+    # UNCOMMENT THIS CODE TO SEE THE ISOLATED CHARACTERS AND THE MODEL'S PREDICTIONS
     # for i in range(len(test_data)):
     #     plot.imshow(test_data[i])
 
@@ -105,10 +89,3 @@ def evalModel(model, test_data):
     #     plot.show()
 
     return predicted_labels
-
-# No longer needed with driver.py implemented
-# # Driver code
-# if __name__ == "__main__":
-#     data = loadTestData()
-#     model = loadModel()
-#     evalModel(model, data)

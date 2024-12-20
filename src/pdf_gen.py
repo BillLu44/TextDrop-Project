@@ -58,12 +58,11 @@ def setup_pdf():
     # Use the TikZ package to place characters in specific coordinates
     doc.packages.append(Package("tikz"))
     doc.preamble.append(NoEscape(r"\pagenumbering{gobble}"))
-    # doc.preamble.append(NoEscape(r'\renewcommand{\familydefault}{\ttdefault}'))
     return doc
 
 
-# Add characters onto a new page of the PDF by their coordinates
-# Below is the legend of styles:
+# Add characters onto a new page of the PDF by their coordinates.
+# Below is the legend of character styles:
 # 'H': Section header. Large, bold font.
 # 'N': Normal text.
 def add_page(pdfData, Bwidth, Bheight):
@@ -98,16 +97,7 @@ def add_page(pdfData, Bwidth, Bheight):
 def render_pdf():
     global doc
     doc.generate_pdf("output/output", clean_tex=False, compiler="pdfLaTeX")
-    # doc.generate_pdf("output", clean_tex=False, compiler="latexmk", compiler_args=['-c'])
 
+    # OR, FOR MAC USERS WITH LATEXMK:
+    # doc.generate_pdf("output/output", clean_tex=False, compiler="latexmk", compiler_args=['-c'])
 
-# if __name__ == "__main__":
-
-#     # Test data
-#     characters = ['O', 'C', 'R', 'P', 'R', 'O', 'J', 'E', 'C', 'T',
-#                   'H', 'E', 'R', 'E', 'I', 'S', 'S', 'O', 'M', 'E', 'T', 'E', 'X', 'T']
-#     coordinates = [(1, 1), (1.8, 1), (2.6, 1), (4.2, 1), (5, 1), (5.8, 1), (6.6, 1), (7.4, 1), (8.2, 1), (9, 1), 
-#                    (1, 2.5), (1.5, 2.5), (2, 2.5), (2.5, 2.5), (3.5, 2.5), (4, 2.5), (5, 2.5), (5.5, 2.5), (6, 2.5), (6.5, 2.5), (7.5, 2.5), (8, 2.5), (8.5, 2.5), (9, 2.5)]
-#     styles = ['H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H',
-#               'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N', 'N']
-#     render_pdf(characters, coordinates, styles)
