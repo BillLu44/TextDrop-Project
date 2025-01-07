@@ -59,6 +59,8 @@ We designed a 3D-printed custom case made of PLA filament to securely house our 
 Figure 6: Model of 3D-printed case designed in Fusion
 
 ## Video:
+https://drive.google.com/file/d/1clOPs7fWLBRwbHNasz1mrBTpl-kRZRKi/view?usp=sharing
+
 
 #### Note:
 The training dataset used for this project was the A-Z Kaggle dataset and 0-9 MNIST dataset from Keras.
