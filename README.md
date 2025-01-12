@@ -35,7 +35,7 @@ Figure 2: Blackboard extraction during the image rectification process
 Figure 3: Image after adjusting the angle and zoom level
 
 ### Character isolation:
-To ensure the character recognition algorithm had consistent input, a program was written to isolate each character on the blackboard for evaluation. The script scans through the entire blackboard, looking for potential characters. Once a character is found, it is bounded, isolated, and compressed into a smaller 28x28 pixel image to be passed on.
+To ensure the character recognition algorithm had consistent input, a program was written to isolate each character on the blackboard for evaluation. The script scans through the entire blackboard, looking for potential characters by identifying connected components of pixels above a certain brightness threshold. Once a potential character is found, it is bounded, isolated, and compressed into a smaller 28x28 pixel image to be passed on.
 
 ### Character recognition using machine learning:
 We implemented a machine-learning model to identify handwritten uppercase letters (A-Z) and digits (0-9) from the blackboard. First, the processed, isolated images of handwritten characters are passed into our model. Then, the model predicts characters with a 95% accuracy on validation data, which translates to an ~87% accuracy on STC blackboard test data.
