@@ -1,18 +1,18 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 # import imageio
 
 
 def board_extractor(image_path):
-    # Read the image
+    # Reads the image
     Image = cv2.imread("test_image/IMG_1586.jpg")
     image = cv2.imread(image_path)
 
     # Gaussian blur with kernel size 13x13
     blurred = cv2.GaussianBlur(image, (13, 13), 0)
 
-    # Define the target color in RGB (OpenCV uses BGR, so reverse it)
+    # Defines the target color in RGB (OpenCV uses BGR, so reverse it)
     target_color = np.array([60, 70, 60], dtype=np.float32)
 
     # Calculate the RMS proximity for each pixel
