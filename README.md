@@ -65,4 +65,4 @@ https://drive.google.com/file/d/1clOPs7fWLBRwbHNasz1mrBTpl-kRZRKi/view?usp=shari
 #### Notes:
 - The training dataset used for this project was the A-Z Kaggle dataset and 0-9 MNIST dataset from Keras.
 - This project is not used for commercial purposes.
-- The original project was developed on GitLabs. This repository is a copy.
+- The original project was developed on GitLabs. This repository is a copy, and the branches were not copied.
