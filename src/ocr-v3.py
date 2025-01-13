@@ -13,7 +13,7 @@ import matplotlib.pyplot as plot
 import sys
 import random
 
-# Constants
+# Constants 1
 NUM_LABELS = 36
 EPOCHS = 30
 BATCH_SIZE = 32
